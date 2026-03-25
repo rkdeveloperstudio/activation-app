@@ -22,6 +22,7 @@ async function loadData() {
             Machine: ${item.machine_id}<br>
             Email: ${item.email}<br>
             WhatsApp: ${item.whatsapp}<br>
+            Activation Key: ${item.hidden_key}<br>
             Status: ${item.status}
         `;
 
