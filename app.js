@@ -51,23 +51,24 @@ async function deleteRequest(id) {
       {
         method: "DELETE",
         headers: {
-          "Authorization": "Bearer " + SUPABASE_KEY,  // ✅ ADD THIS
-          "apikey": SUPABASE_KEY                     // ✅ ADD THIS
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "apikey": SUPABASE_KEY
         }
       }
     );
+
+    const text = await res.text(); // 👈 get real error
 
     if (res.ok) {
       alert("Deleted successfully");
       loadData();
     } else {
-      const text = await res.text();
-      alert("Failed to delete: " + text);
+      alert("FAILED: " + text); // 👈 show real problem
     }
 
   } catch (err) {
     console.error(err);
-    alert("Error deleting request");
+    alert("ERROR: " + err.message);
   }
 }
 // Auto-refresh every 5 seconds
