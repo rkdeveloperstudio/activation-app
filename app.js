@@ -46,17 +46,25 @@ async function deleteRequest(id) {
   if (!confirm("Are you sure you want to delete this request?")) return;
 
   try {
-    const res = await fetch(`https://jcencfbhpljymgkatuea.supabase.co/functions/v1/smooth-endpoint?id=${id}`, {
-      method: "DELETE"
-    });
+    const res = await fetch(
+      `https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + SUPABASE_KEY,  // ✅ ADD THIS
+          "apikey": SUPABASE_KEY                     // ✅ ADD THIS
+        }
+      }
+    );
 
     if (res.ok) {
       alert("Deleted successfully");
-      loadData(); // Refresh after delete
+      loadData();
     } else {
-      const errorText = await res.text();
-      alert("Failed to delete: " + errorText);
+      const text = await res.text();
+      alert("Failed to delete: " + text);
     }
+
   } catch (err) {
     console.error(err);
     alert("Error deleting request");
