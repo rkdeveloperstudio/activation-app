@@ -1,6 +1,7 @@
 const SUPABASE_URL = "https://jcencfbhpljymgkatuea.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZW5jZmJocGxqeW1na2F0dWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU1NDgsImV4cCI6MjA4OTgzMTU0OH0.8G3Sd7p9L-akoPNoF_BUxRK-nlVf3FKXJpAR7BejheY";
 
+// Load data from Supabase
 async function loadData() {
     try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/activation_requests?order=id.desc`, {
@@ -13,14 +14,8 @@ async function loadData() {
         if (!res.ok) throw new Error("Failed to fetch data");
 
         const data = await res.json();
-
         const list = document.getElementById("list");
         list.innerHTML = "";
-
-        if (data.length === 0) {
-            list.innerHTML = "<li>No requests found</li>";
-            return;
-        }
 
         data.forEach(item => {
             const li = document.createElement("li");
@@ -41,36 +36,26 @@ async function loadData() {
         document.getElementById("list").innerHTML = "<li>Error loading data</li>";
     }
 }
-// Delete function (calls serverless function)
+
+// ✅ Add this delete function here
 async function deleteRequest(id) {
   if (!confirm("Are you sure you want to delete this request?")) return;
 
-  try {
-    const res = await fetch(
-      `https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "apikey": SUPABASE_KEY
-        }
-      }
-    );
+  const res = await fetch(`https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`, {
+    method: "DELETE"
+  });
 
-    const text = await res.text(); // 👈 get real error
-
-    if (res.ok) {
-      alert("Deleted successfully");
-      loadData();
-    } else {
-      alert("FAILED: " + text); // 👈 show real problem
-    }
-
-  } catch (err) {
-    console.error(err);
-    alert("ERROR: " + err.message);
+  const text = await res.text();
+  if (res.ok) {
+    alert("Deleted successfully");
+    loadData(); // Refresh list
+  } else {
+    alert("Failed: " + text);
   }
 }
+
 // Auto-refresh every 5 seconds
 setInterval(loadData, 5000);
+
+// First load
 loadData();
