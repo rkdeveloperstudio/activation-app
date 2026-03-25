@@ -41,19 +41,24 @@ async function loadData() {
 async function deleteRequest(id) {
   if (!confirm("Are you sure you want to delete this request?")) return;
 
-  const res = await fetch(`https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`, {
-    method: "DELETE"
-  });
+  try {
+    const res = await fetch(`https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`, {
+      method: "DELETE"
+    });
 
-  const text = await res.text();
-  if (res.ok) {
-    alert("Deleted successfully");
-    loadData(); // Refresh list
-  } else {
-    alert("Failed: " + text);
+    const text = await res.text();
+
+    if (res.ok) {
+      alert("Deleted successfully");
+      loadData(); // Refresh list
+    } else {
+      alert("Failed: " + text);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error: " + err.message);
   }
 }
-
 // Auto-refresh every 5 seconds
 setInterval(loadData, 5000);
 
