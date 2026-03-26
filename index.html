@@ -6,7 +6,7 @@
     <title>Activation Requests</title>
 
     <!-- Manifest -->
-    <link rel="manifest" href="manifest.json">
+   <link rel="manifest" href="manifest.json">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
@@ -21,15 +21,15 @@
     </ul>
 
     <!-- App JS -->
-    <script src="app.js"></script>
+   <script src="app.js"></script>
 
     <!-- Register Service Worker -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log("Service Worker Registered"))
-                .catch(err => console.error("SW registration failed:", err));
-        }
-    </script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log("SW OK"))
+    .catch(err => console.error(err));
+}
+</script>
 </body>
 </html>

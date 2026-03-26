@@ -17,6 +17,11 @@ async function loadData() {
         const list = document.getElementById("list");
         list.innerHTML = "";
 
+        if (data.length === 0) {
+            list.innerHTML = "<li>No requests found</li>";
+            return;
+        }
+
         data.forEach(item => {
             const li = document.createElement("li");
             li.innerHTML = `
@@ -37,30 +42,29 @@ async function loadData() {
     }
 }
 
-// ✅ Add this delete function here
+// Delete request
 async function deleteRequest(id) {
-  if (!confirm("Are you sure you want to delete this request?")) return;
+    if (!confirm("Are you sure you want to delete this request?")) return;
 
-  try {
-    const res = await fetch(`https://jcencfbhpljymgkatuea.supabase.co/functions/v1/deleterequest?id=${id}`, {
-      method: "DELETE"
-    });
+    try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/deleterequest?id=${id}`, {
+            method: "DELETE"
+        });
 
-    const text = await res.text();
+        const text = await res.text();
 
-    if (res.ok) {
-      alert("Deleted successfully");
-      loadData(); // Refresh list
-    } else {
-      alert("Failed: " + text);
+        if (res.ok) {
+            alert("Deleted successfully");
+            loadData();
+        } else {
+            alert("Failed: " + text);
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error: " + err.message);
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error: " + err.message);
-  }
 }
-// Auto-refresh every 5 seconds
-setInterval(loadData, 5000);
 
-// First load
+// Auto-refresh
+setInterval(loadData, 5000);
 loadData();

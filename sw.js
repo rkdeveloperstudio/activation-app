@@ -1,26 +1,25 @@
-const CACHE_NAME = "activation-app-cache-v1";
+const CACHE_NAME = "app-v2";
+
 const urlsToCache = [
-    "/",
-    "/index.html",
-    "/style.css",
-    "/app.js",
-    "/manifest.json",
-    "/icons/icon-192.png",
-    "/icons/icon-512.png"
+  "index.html",
+  "style.css",
+  "app.js",
+  "manifest.json"
 ];
 
 self.addEventListener("install", event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(urlsToCache);
-        })
-    );
+  self.skipWaiting(); // force update
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("fetch", event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
-    );
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
