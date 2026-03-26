@@ -6,7 +6,7 @@
     <title>Activation Requests</title>
 
     <!-- Manifest -->
-   <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
@@ -15,21 +15,44 @@
     <meta name="theme-color" content="#4CAF50">
 </head>
 <body>
-    <h2>Activation Requests</h2>
+
+    <!-- 🔴 Title + Badge -->
+    <h2>
+        Activation Requests 
+        <span id="badge" style="color:red; font-size:14px;"></span>
+    </h2>
+
+    <!-- 🔊 Enable Sound Button -->
+    <button onclick="enableSound()">Enable Notification Sound</button>
+
+    <!-- 🔊 Hidden Audio -->
+    <audio id="notifySound" src="notify.mp3" preload="auto"></audio>
+
+    <!-- List -->
     <ul id="list">
         <!-- Data from Supabase will appear here -->
     </ul>
 
     <!-- App JS -->
-   <script src="app.js"></script>
+    <script src="app.js"></script>
 
-    <!-- Register Service Worker -->
+    <!-- Service Worker -->
     <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log("SW OK"))
-    .catch(err => console.error(err));
-}
-</script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(() => console.log("SW OK"))
+            .catch(err => console.error(err));
+    }
+
+    // 🔊 Enable sound (required for mobile)
+    function enableSound() {
+        const sound = document.getElementById("notifySound");
+        sound.play().then(() => {
+            sound.pause();
+            alert("Sound Enabled 🔔");
+        });
+    }
+    </script>
+
 </body>
 </html>

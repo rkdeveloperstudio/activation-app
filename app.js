@@ -1,6 +1,8 @@
 const SUPABASE_URL = "https://jcencfbhpljymgkatuea.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZW5jZmJocGxqeW1na2F0dWVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU1NDgsImV4cCI6MjA4OTgzMTU0OH0.8G3Sd7p9L-akoPNoF_BUxRK-nlVf3FKXJpAR7BejheY";
 
+let lastCount = 0;
+
 // Load data from Supabase
 async function loadData() {
     try {
@@ -11,12 +13,34 @@ async function loadData() {
             }
         });
 
-        if (!res.ok) throw new Error("Failed to fetch data");
+        if (!res.ok) throw new Error("Failed to fetch");
 
         const data = await res.json();
+
         const list = document.getElementById("list");
+        const badge = document.getElementById("badge");
+        const sound = document.getElementById("notifySound");
+
         list.innerHTML = "";
 
+        // ✅ Detect new entries
+        if (lastCount !== 0 && data.length > lastCount) {
+            const newCount = data.length - lastCount;
+
+            badge.innerText = ` (New: ${newCount})`;
+
+            // 🔔 Sound
+            sound.play().catch(() => {});
+
+            // 📢 Popup
+            alert("New Activation Request!");
+        } else {
+            badge.innerText = "";
+        }
+
+        lastCount = data.length;
+
+        // ✅ Full UI (correct)
         if (data.length === 0) {
             list.innerHTML = "<li>No requests found</li>";
             return;
@@ -65,6 +89,6 @@ async function deleteRequest(id) {
     }
 }
 
-// Auto-refresh
+// Auto refresh
 setInterval(loadData, 5000);
 loadData();
